@@ -1,14 +1,22 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const logger = require('./logger');
+
 const indexRouter = require('./routes/index');
 const profileRouter = require('./routes/profile');
+const gameRouter = require('./routes/game');
 
 const app = express();
 
 app.use(
-  morgan('dev', {
-    skip: (req) => req.statusCode < 400,
+  morgan(':method :url :status :res[content-length] - :response-time ms', {
+    skip: (req, res) => res.statusCode < 400,
+    stream: {
+      write: (str) => {
+        logger.debug({ message: str });
+      },
+    },
   }),
 );
 
@@ -17,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
 app.use('/profile', profileRouter);
+app.use('/game', gameRouter);
 
 // error handler
 // eslint-disable-next-line no-unused-vars
