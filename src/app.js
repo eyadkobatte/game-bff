@@ -1,7 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 
-const apiRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
+const profileRouter = require('./routes/profile');
 
 const app = express();
 
@@ -14,7 +15,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', apiRouter);
+app.use('/', indexRouter);
+app.use('/profile', profileRouter);
 
 // error handler
 // eslint-disable-next-line no-unused-vars

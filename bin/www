@@ -3,11 +3,12 @@
 /**
  * Module dependencies.
  */
-
+require('dotenv').config();
 const http = require('http');
+const mongoose = require('mongoose');
 
-const app = require('../app');
-const logger = require('../logger');
+const app = require('../src/app');
+const logger = require('../src/logger');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -72,7 +73,22 @@ const onError = (error) => {
  * Event listener for HTTP server "listening" event.
  */
 
-const onListening = () => {
+const onListening = async () => {
+  await mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  });
+
+  mongoose.connection.on('error', () => {
+    logger.error({ message: 'DB Connection Error' });
+    process.exit(1);
+  });
+
+  mongoose.connection.once('open', () => {
+    logger.log({ message: 'Connected to DB' });
+  });
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   logger.info({ message: `Listening on ${bind}` });
