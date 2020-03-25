@@ -42,4 +42,31 @@ router.post(
   }),
 );
 
+router.put(
+  '/',
+  asyncHandler(async (req, res, next) => {
+    const { username, gameCode } = req.body;
+    // Check if the game exists
+    const game = await Game.findOne({ gameCode });
+    if (!game) {
+      // If no game exists with such code, throw an error
+      const errorMessage = 'Could not find game';
+      logger.error({ message: errorMessage, gameCode, username });
+      return next(new Error(errorMessage));
+    }
+    if (game.usersInGame.includes(username)) {
+      // If user already is in the game, throw an error
+      const errorMessage = 'User already inside the game';
+      logger.error({ message: errorMessage, gameCode, username });
+      return next(new Error(errorMessage));
+    }
+    // Add the user to the lists and send back new game object
+    game.usersInGame.push(username);
+    await game.save();
+    logger.info({ message: 'User added to game' });
+    res.status(200).json(game);
+    return next;
+  }),
+);
+
 module.exports = router;
