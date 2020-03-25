@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "dev": "NODE_ENV=development nodemon ./bin/www"
+    "dev": "NODE_ENV=development nodemon ./bin/www",
+    "format:check": "prettier --check \"src/**/*.js\"",
+    "lint:check": "eslint \"src/**/*.js\"",
+    "test": "npm run format:check && npm run lint:check"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "faker": "^4.1.0",
     "mongoose": "^5.9.6",
