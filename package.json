@@ -4,11 +4,17 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "dev": "NODE_ENV=development nodemon ./bin/www"
+    "dev": "NODE_ENV=development nodemon ./bin/www",
+    "format:check": "prettier --check \"src/**/*.js\"",
+    "lint:check": "eslint \"src/**/*.js\"",
+    "test": "npm run format:check && npm run lint:check"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "mongoose": "^5.9.6",
+    "morgan": "~1.9.1",
+    "multer": "^1.4.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
