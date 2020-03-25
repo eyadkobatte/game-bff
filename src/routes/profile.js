@@ -55,7 +55,6 @@ router.post(
     });
     await user.save();
     res.status(200).json(user);
-    logger.info({ files: req.files });
     return next;
   }),
 );
